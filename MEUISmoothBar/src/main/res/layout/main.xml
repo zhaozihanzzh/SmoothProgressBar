@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -6,8 +7,38 @@
     >
 
     <TextView
-        android:text="@string/hello_world"
+        android:text="欢迎"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <!--fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:indeterminate="true"
+        android:indeterminateOnly="false"
+        app:spb_speed="1.7"
+        app:spb_stroke_separator_length="8dp"
+        app:spb_sections_count="2"
+        app:spb_generate_background_with_colors="true"
+        app:spb_progressiveStart_activated="true"/-->
+        
+    <meui.progress.smoothprogressbar.SmoothProgressBar
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:indeterminate="true"
+        android:indeterminateOnly="false"
+        app:spb_speed="2.0"
+        app:spb_stroke_separator_length="4dp"
+        app:spb_reversed="false"
+        app:spb_mirror_mode="false"
+        app:spb_sections_count="4"
+        app:spb_generate_background_with_colors="true"
+        app:spb_progressiveStart_activated="true"
+        app:spb_color="#FF009688"
+        app:spb_progressiveStart_speed="1.5"
+        app:spb_progressiveStop_speed="3.4"/>
 
+    <!--spb_progressiveStart_activated与
+    spb_generate_background_with_colors
+    必须为true，否则更新时会闪烁-->
+        
 </LinearLayout>
