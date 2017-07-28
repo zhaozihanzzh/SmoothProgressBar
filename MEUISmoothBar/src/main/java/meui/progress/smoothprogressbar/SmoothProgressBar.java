@@ -69,18 +69,18 @@ final public class SmoothProgressBar extends ProgressBar {
         //a.getBoolean(R.styleable.SmoothProgressBar_spb_reversed, res.getBoolean(R.bool.spb_default_reversed));
     final boolean mirrorMode = getBoolean(RESOLVER, "spb_mirror");
         // a.getBoolean(R.styleable.SmoothProgressBar_spb_mirror_mode, res.getBoolean(R.bool.spb_default_mirror_mode));
-    // final int colorsId = a.getResourceId(R.styleable.SmoothProgressBar_spb_colors, 0);
+        // final int colorsId = a.getResourceId(R.styleable.SmoothProgressBar_spb_colors, 0);
         // We can't use this way in order to get user's settings.
     final boolean progressiveStartActivated = true; //当仅有这一个ProgressBar时设定为false可能会造成屏幕闪烁。
         // getBoolean(RESOLVER, "spb_progressive_start_activated");
         // a.getBoolean(R.styleable.SmoothProgressBar_spb_progressiveStart_activated, res.getBoolean(R.bool.spb_default_progressiveStart_activated));
     // final Drawable backgroundDrawable = a.getDrawable(R.styleable.SmoothProgressBar_spb_background);
-    final boolean generateBackgroundWithColors = true; //当仅有这一个ProgressBar时设定为false可能会造成屏幕闪烁。
+    final boolean generateBackgroundWithColors = false; //当仅有这一个ProgressBar时设定为false可能会造成屏幕闪烁。
         // a.getBoolean(R.styleable.SmoothProgressBar_spb_generate_background_with_colors, false);
     final boolean gradients = getBoolean(RESOLVER,"spb_gradients");
         // a.getBoolean(R.styleable.SmoothProgressBar_spb_gradients, false);
     // a.recycle();
-    /*final*/ boolean multiColor = getBoolean(RESOLVER,"spb_color_multi");
+    final boolean multiColor = getBoolean(RESOLVER,"spb_color_multi");
 
     //interpolator
     Interpolator interpolator = null;
@@ -107,7 +107,7 @@ final public class SmoothProgressBar extends ProgressBar {
     //// Use for DEBUG:
     // multiColor=true;
     ////
-    ArrayList<Integer> colors = new ArrayList<>();
+    final ArrayList<Integer> colors = new ArrayList<>();
     //colors
     if(multiColor){
         String colorString = Settings.System.getString(RESOLVER,"spb_color_string");
@@ -276,6 +276,10 @@ final public class SmoothProgressBar extends ProgressBar {
       ((SmoothProgressDrawable) ret).setInterpolator(interpolator);
   }
   
+  /**
+   * Get user's setting from Settings and parse it to boolean.
+   * @author zhaozihanzzh
+   */
   public static boolean getBoolean(ContentResolver RESOLVER, String name){
       return Settings.System.getInt(RESOLVER,name,0)==1;
   }
