@@ -1,16 +1,12 @@
 apply plugin: 'com.android.library'
 
-repositories {
-    mavenCentral()
-}
-
 android {
     compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
     buildToolsVersion project.BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion 7
-        targetSdkVersion 21
+        targetSdkVersion 26
         versionName project.VERSION_NAME
         versionCode Integer.parseInt(project.VERSION_CODE)
     }
@@ -18,6 +14,10 @@ android {
     lintOptions {
         abortOnError false
     }
+}
+
+dependencies {
+    implementation libraries.annotations
 }
 
 //apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'

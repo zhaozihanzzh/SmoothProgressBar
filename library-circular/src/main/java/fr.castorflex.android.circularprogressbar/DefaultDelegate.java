@@ -34,19 +34,19 @@ class DefaultDelegate implements PBDelegate {
   private boolean mFirstSweepAnimation;
 
   //params
-  private Interpolator mAngleInterpolator;
-  private Interpolator mSweepInterpolator;
-  private int[] mColors;
-  private float mSweepSpeed;
-  private float mRotationSpeed;
-  private int mMinSweepAngle;
-  private int mMaxSweepAngle;
+  private final Interpolator mAngleInterpolator;
+  private final Interpolator mSweepInterpolator;
+  private final int[] mColors;
+  private final float mSweepSpeed;
+  private final float mRotationSpeed;
+  private final int mMinSweepAngle;
+  private final int mMaxSweepAngle;
 
-  private CircularProgressDrawable mParent;
+  private final CircularProgressDrawable mParent;
   private CircularProgressDrawable.OnEndListener mOnEndListener;
 
-  public DefaultDelegate(@NonNull CircularProgressDrawable parent,
-                         @NonNull Options options) {
+  DefaultDelegate(@NonNull CircularProgressDrawable parent,
+                  @NonNull Options options) {
     mParent = parent;
     mSweepInterpolator = options.sweepInterpolator;
     mAngleInterpolator = options.angleInterpolator;
@@ -113,12 +113,12 @@ class DefaultDelegate implements PBDelegate {
     mCurrentRotationAngleOffset = mCurrentRotationAngleOffset + (360 - mMaxSweepAngle);
   }
 
-  public void setCurrentRotationAngle(float currentRotationAngle) {
+  private void setCurrentRotationAngle(float currentRotationAngle) {
     mCurrentRotationAngle = currentRotationAngle;
     mParent.invalidate();
   }
 
-  public void setCurrentSweepAngle(float currentSweepAngle) {
+  private void setCurrentSweepAngle(float currentSweepAngle) {
     mCurrentSweepAngle = currentSweepAngle;
     mParent.invalidate();
   }
@@ -240,7 +240,7 @@ class DefaultDelegate implements PBDelegate {
         CircularProgressDrawable.OnEndListener endListener = mOnEndListener;
         mOnEndListener = null;
 
-        if(isStartedAndNotCancelled()) {
+        if (isStartedAndNotCancelled()) {
           setEndRatio(0f);
           mParent.stop();
           if (endListener != null) {

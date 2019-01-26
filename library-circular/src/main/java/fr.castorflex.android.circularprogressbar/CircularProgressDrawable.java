@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.os.PowerManager;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
@@ -44,9 +45,9 @@ public class CircularProgressDrawable
 
   private final RectF mBounds = new RectF();
 
-  private PowerManager mPowerManager;
-  private Options mOptions;
-  private Paint mPaint;
+  private final PowerManager mPowerManager;
+  private final Options mOptions;
+  private final Paint mPaint;
   private boolean mRunning;
   private PBDelegate mPBDelegate;
 
@@ -68,7 +69,7 @@ public class CircularProgressDrawable
   }
 
   @Override
-  public void draw(Canvas canvas) {
+  public void draw(@NonNull Canvas canvas) {
     if (isRunning()) mPBDelegate.draw(canvas, mPaint);
   }
 
@@ -131,7 +132,8 @@ public class CircularProgressDrawable
     invalidateSelf();
   }
 
-  public void invalidate() {
+  @UiThread
+  void invalidate() {
     if (getCallback() == null) {
       stop(); // we don't want these animator to keep running...
     }
@@ -143,11 +145,11 @@ public class CircularProgressDrawable
     return mRunning;
   }
 
-  public Paint getCurrentPaint() {
+  Paint getCurrentPaint() {
     return mPaint;
   }
 
-  public RectF getDrawableBounds() {
+  RectF getDrawableBounds() {
     return mBounds;
   }
 
@@ -175,7 +177,8 @@ public class CircularProgressDrawable
     private float mRotationSpeed;
     private int mMinSweepAngle;
     private int mMaxSweepAngle;
-    @CircularProgressDrawable.Style int mStyle;
+    @CircularProgressDrawable.Style
+    int mStyle;
     private PowerManager mPowerManager;
 
     public Builder(@NonNull Context context) {

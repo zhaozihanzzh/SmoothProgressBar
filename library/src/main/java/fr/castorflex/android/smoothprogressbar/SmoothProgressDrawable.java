@@ -12,8 +12,11 @@ import android.graphics.Shader;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
+import android.support.annotation.UiThread;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Interpolator;
+
+import java.util.Locale;
 
 import static fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils.checkColors;
 import static fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils.checkNotNull;
@@ -113,12 +116,15 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
 
   ////////////////////////////////////////////////////////////////////////////
   ///////////////////         SETTERS
+
+  @UiThread
   public void setInterpolator(Interpolator interpolator) {
     if (interpolator == null) throw new IllegalArgumentException("Interpolator cannot be null");
     mInterpolator = interpolator;
     invalidateSelf();
   }
 
+  @UiThread
   public void setColors(int[] colors) {
     if (colors == null || colors.length == 0)
       throw new IllegalArgumentException("Colors cannot be null or empty");
@@ -128,28 +134,33 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
     invalidateSelf();
   }
 
+  @UiThread
   public void setColor(int color) {
     setColors(new int[]{color});
   }
 
+  @UiThread
   public void setSpeed(float speed) {
     if (speed < 0) throw new IllegalArgumentException("Speed must be >= 0");
     mSpeed = speed;
     invalidateSelf();
   }
 
+  @UiThread
   public void setProgressiveStartSpeed(float speed) {
     if (speed < 0) throw new IllegalArgumentException("SpeedProgressiveStart must be >= 0");
     mProgressiveStartSpeed = speed;
     invalidateSelf();
   }
 
+  @UiThread
   public void setProgressiveStopSpeed(float speed) {
     if (speed < 0) throw new IllegalArgumentException("SpeedProgressiveStop must be >= 0");
     mProgressiveStopSpeed = speed;
     invalidateSelf();
   }
 
+  @UiThread
   public void setSectionsCount(int sectionsCount) {
     if (sectionsCount <= 0) throw new IllegalArgumentException("SectionsCount must be > 0");
     mSectionsCount = sectionsCount;
@@ -159,6 +170,7 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
     invalidateSelf();
   }
 
+  @UiThread
   public void setSeparatorLength(int separatorLength) {
     if (separatorLength < 0)
       throw new IllegalArgumentException("SeparatorLength must be >= 0");
@@ -166,24 +178,28 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
     invalidateSelf();
   }
 
+  @UiThread
   public void setStrokeWidth(float strokeWidth) {
     if (strokeWidth < 0) throw new IllegalArgumentException("The strokeWidth must be >= 0");
     mPaint.setStrokeWidth(strokeWidth);
     invalidateSelf();
   }
 
+  @UiThread
   public void setReversed(boolean reversed) {
     if (mReversed == reversed) return;
     mReversed = reversed;
     invalidateSelf();
   }
 
+  @UiThread
   public void setMirrorMode(boolean mirrorMode) {
     if (mMirrorMode == mirrorMode) return;
     mMirrorMode = mirrorMode;
     invalidateSelf();
   }
 
+  @UiThread
   public void setBackgroundDrawable(Drawable backgroundDrawable) {
     if (mBackgroundDrawable == backgroundDrawable) return;
     mBackgroundDrawable = backgroundDrawable;
@@ -202,10 +218,12 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
     return mStrokeWidth;
   }
 
+  @UiThread
   public void setProgressiveStartActivated(boolean progressiveStartActivated) {
     mProgressiveStartActivated = progressiveStartActivated;
   }
 
+  @UiThread
   public void setUseGradients(boolean useGradients) {
     if (mUseGradients == useGradients) return;
 
@@ -214,7 +232,7 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
     invalidateSelf();
   }
 
-  protected void refreshLinearGradientOptions() {
+  private void refreshLinearGradientOptions() {
     if (mUseGradients) {
       mLinearGradientColors = new int[mSectionsCount + 2];
       mLinearGradientPositions = new float[mSectionsCount + 2];
@@ -252,12 +270,13 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
     }
 
     if (mUseGradients)
-      drawGradient(canvas);
+      prepareGradient();
 
     drawStrokes(canvas);
   }
 
-  private void drawGradient(Canvas canvas) {
+  @UiThread
+  private void prepareGradient() {
     float xSectionWidth = 1f / mSectionsCount;
     int currentIndexColor = mColorsIndex;
 
@@ -290,6 +309,7 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
     mPaint.setShader(linearGradient);
   }
 
+  @UiThread
   private void drawStrokes(Canvas canvas) {
     if (mReversed) {
       canvas.translate(mBounds.width(), 0);
@@ -354,6 +374,7 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
     drawBackgroundIfNeeded(canvas, firstX, lastX);
   }
 
+  @UiThread
   private void drawLine(Canvas canvas, int canvasWidth, float startX, float startY, float stopX, float stopY, int currentIndexColor) {
     mPaint.setColor(mColors[currentIndexColor]);
 
@@ -370,6 +391,7 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
     }
   }
 
+  @UiThread
   private void drawBackgroundIfNeeded(Canvas canvas, float firstX, float lastX) {
     if (mBackgroundDrawable == null) return;
 
@@ -441,6 +463,7 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
     }
   }
 
+  @UiThread
   private void drawBackground(Canvas canvas, float fromX, float toX) {
     int count = canvas.save();
     canvas.clipRect(fromX, (int) ((canvas.getHeight() - mStrokeWidth) / 2),
@@ -449,12 +472,14 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
     canvas.restoreToCount(count);
   }
 
+  @UiThread
   private int incrementColor(int colorIndex) {
     ++colorIndex;
     if (colorIndex >= mColors.length) colorIndex = 0;
     return colorIndex;
   }
 
+  @UiThread
   private int decrementColor(int colorIndex) {
     --colorIndex;
     if (colorIndex < 0) colorIndex = mColors.length - 1;
@@ -465,6 +490,7 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
    * Start the animation with the first color.
    * Calls progressiveStart(0)
    */
+  @UiThread
   public void progressiveStart() {
     progressiveStart(0);
   }
@@ -474,11 +500,13 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
    *
    * @param index
    */
+  @UiThread
   public void progressiveStart(int index) {
     resetProgressiveStart(index);
     start();
   }
 
+  @UiThread
   private void resetProgressiveStart(int index) {
     checkColorIndex(index);
 
@@ -493,6 +521,7 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
   /**
    * Finish the animation by animating the remaining sections.
    */
+  @UiThread
   public void progressiveStop() {
     mFinishing = true;
     mStartSection = 0;
@@ -597,7 +626,7 @@ public class SmoothProgressDrawable extends Drawable implements Animatable {
 
   private void checkColorIndex(int index) {
     if (index < 0 || index >= mColors.length) {
-      throw new IllegalArgumentException(String.format("Index %d not valid", index));
+      throw new IllegalArgumentException(String.format(Locale.US, "Index %d not valid", index));
     }
   }
 
